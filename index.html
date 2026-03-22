@@ -1,256 +1,482 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⛏️ MOLTCRAFT - Agent Dashboard</title>
-    <link rel="stylesheet" href="css/style.css?v=28">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>moltcraft — BlackRoad OS</title>
+<meta name="description" content="Isometric pixel world designed as a playground for AI agents. Agents navigate, interact with objects, complete tasks, and learn from the environment.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --card: #131313;
+  --border: #1a1a1a;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --text-bright: #fff;
+  --pink: #ff1d6c;
+  --amber: #f5a623;
+  --blue: #2979ff;
+  --violet: #9c27b0;
+  --green: #4caf50;
+  --gradient: linear-gradient(90deg, #ff1d6c, #f5a623, #2979ff, #9c27b0);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.gradient-bar {
+  height: 2px;
+  background: var(--gradient);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spectrum-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--gradient);
+  position: relative;
+}
+
+.spectrum-mark::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.nav-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text-bright); }
+
+.hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.hero-tagline {
+  font-size: 1.5rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  color: var(--text-dim);
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-why {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.hero-why h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.hero-why p {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin: 0;
+  max-width: none;
+}
+
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  transition: border-color 0.2s;
+}
+
+.feature-card:hover {
+  border-color: #2a2a2a;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.feature-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.integration {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.integration-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .integration-card { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.integration-info h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+}
+
+.integration-info p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.integration-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.meta-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  min-width: 60px;
+}
+
+.meta-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-bright);
+}
+
+.integration-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diagram-node {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.diagram-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.diagram-dot.pink { background: var(--pink); }
+.diagram-dot.amber { background: var(--amber); }
+.diagram-dot.blue { background: var(--blue); }
+.diagram-dot.green { background: var(--green); }
+
+.diagram-connector {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  margin-left: 1.6rem;
+}
+
+footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.footer-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--text-bright); }
+</style>
 </head>
 <body>
-<script>
-window.onerror = function(msg, url, line, col, err) {
-    document.body.innerHTML = '<div style="color:red;padding:20px;font-family:monospace;font-size:14px;background:#111;">'
-        + '<h2>JS ERROR</h2>'
-        + '<p>' + msg + '</p>'
-        + '<p>File: ' + url + ' Line: ' + line + '</p>'
-        + '<pre>' + (err && err.stack || '') + '</pre>'
-        + '</div>';
-};
-</script>
-    <!-- Connection Overlay -->
-    <div id="connectionOverlay" class="overlay">
-        <div class="connection-panel">
-            <h1 class="pixel-title">⛏️ MOLTCRAFT</h1>
-            <p class="connection-subtitle">Connect to Gateway Server</p>
-            <div class="form-group">
-                <label>Gateway URL</label>
-                <input type="text" id="gatewayUrl" placeholder="http://192.168.1.108:8080" value="http://192.168.1.108:8080">
-            </div>
-            <div class="form-group">
-                <label>Token</label>
-                <input type="password" id="gatewayToken" placeholder="Your gateway token">
-            </div>
-            <div class="button-row">
-                <button id="connectBtn" class="btn-primary">JOIN SERVER</button>
-            </div>
-            <div id="connectionError" class="error-message"></div>
-            <div class="connection-help">
-                <p>📡 Gateway URL: run <code>moltbot status</code> to find it</p>
-                <p>🔑 Token: <code>cat ~/.moltbot/moltbot.json | grep token</code></p>
-                <p>🏠 Default local: <code>http://localhost:8080</code> (proxy) or <code>http://localhost:18789</code> (direct)</p>
-            </div>
-        </div>
+<div class="gradient-bar"></div>
+
+<nav>
+  <div class="nav-left">
+    <div class="spectrum-mark"></div>
+    <span class="nav-title">moltcraft</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#integration">Integration</a></li>
+    <li><a href="https://blackroad.io">BlackRoad OS</a></li>
+    <li><a href="https://github.com/blackboxprogramming/moltcraft">GitHub</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">BlackRoad OS Fork</div>
+  <h1>moltcraft</h1>
+  <p class="hero-tagline">Agent playground.</p>
+  <p>Isometric pixel world designed as a playground for AI agents. Agents navigate, interact with objects, complete tasks, and learn from the environment.</p>
+  <div class="hero-why">
+    <h3>Why BlackRoad Forked This</h3>
+    <p>Agents need a visual environment to practice navigation, object interaction, and task completion. moltcraft provides an isometric pixel world where agents can train spatial reasoning and task planning in a controlled, observable setting.</p>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-title">What Makes This Fork Special</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">&#9670;</div>
+      <h3>Isometric World</h3>
+      <p>Beautiful isometric pixel art environment with buildings, paths, and interactive objects.</p>
     </div>
-
-    <!-- Top Status Bar -->
-    <div id="topBar" class="top-bar">
-        <div class="top-bar-left">
-            <span class="title pixel-title">⛏️ MOLTCRAFT</span>
-            <!-- Removed: NEW QUEST button — agents are spawned via chat -->
-        </div>
-        <div class="top-bar-center">
-            <span class="token-count">⬡ <span id="tokenCount">0</span></span>
-            <span class="stat-display">💰 <span id="totalCost">$0.0000</span></span>
-            <span class="stat-display">⏱️ <span id="activeTime">00:00:00</span></span>
-            <span class="status-badge working">
-                <span id="workingCount">0</span> WORKING
-            </span>
-            <span class="status-badge idle">
-                <span id="idleCount">0</span> IDLE
-            </span>
-            <span class="status-badge waiting">
-                <span id="waitingCount">0</span> WAITING
-            </span>
-        </div>
-        <div class="top-bar-right">
-            <button id="settingsBtn" class="mute-btn" title="Settings">⚙️</button>
-            <button id="muteBtn" class="mute-btn" title="Toggle Sound">🔊</button>
-            <div id="channelIndicators" class="channel-indicators"></div>
-            <span id="onlineStatus" class="status-badge online">ONLINE</span>
-        </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9674;</div>
+      <h3>Agent Navigation</h3>
+      <p>Agents move through the world using pathfinding, avoiding obstacles and finding optimal routes.</p>
     </div>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Left Sidebar - Session List -->
-        <div id="leftSidebar" class="left-sidebar">
-            <div class="sidebar-header">
-                <span class="pixel-text">AGENTS</span>
-                <span class="agent-count" id="agentCount">0</span>
-            </div>
-            <div id="sessionList" class="session-list">
-                <!-- Sessions will be populated here -->
-            </div>
-        </div>
-
-        <!-- Center - Isometric World -->
-        <div class="world-container">
-            <canvas id="worldCanvas"></canvas>
-            <div class="minimap-container">
-                <canvas id="minimapCanvas" width="150" height="150"></canvas>
-            </div>
-        </div>
-
-        <!-- Right Sidebar - Chat Only -->
-        <div id="chatSidebar" class="chat-sidebar hidden">
-            <div class="chat-sidebar-header">
-                <span class="pixel-text">SESSION CHAT</span>
-            </div>
-            <div id="chatMessages" class="chat-messages">
-                <div class="chat-empty">Select an agent to chat...</div>
-            </div>
-            <div class="chat-input-row">
-                <button id="micBtn" class="mic-btn" title="Hold to speak">🎤</button>
-                <input type="text" id="messageInput" placeholder="Send a message..." class="chat-input">
-                <button id="sendMessageBtn" class="send-btn">⚡</button>
-            </div>
-        </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9632;</div>
+      <h3>Task System</h3>
+      <p>Agents receive and complete tasks: gather items, deliver packages, build structures, interact with NPCs.</p>
     </div>
-
-    <!-- Bottom Panel - Agent Details -->
-    <div id="bottomPanel" class="bottom-panel hidden">
-        <div class="panel-left">
-            <div class="portrait-frame">
-                <canvas id="portraitCanvas" width="100" height="100"></canvas>
-            </div>
-        </div>
-        <div class="panel-center">
-            <div class="session-header">
-                <span class="session-name" id="selectedSessionName">Agent Name</span>
-                <span class="model-badge" id="selectedModel">claude-opus-4-5</span>
-            </div>
-            <div class="session-stats">
-                <div class="stat-item">
-                    <span class="stat-label">CTX:</span>
-                    <div class="progress-bar">
-                        <div id="ctxProgress" class="progress-fill" style="width: 0%"></div>
-                    </div>
-                    <span id="ctxPercent">0%</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value" id="tokenUsage">0</span> tokens
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value" id="messageCount">0</span> msgs
-                </div>
-                <div class="stat-item">
-                    <span class="channel-badge" id="channelBadge">telegram</span>
-                </div>
-            </div>
-        </div>
-        <div class="panel-right">
-        </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9654;</div>
+      <h3>Observable State</h3>
+      <p>Full state visibility for debugging and analysis. Watch agent decisions in real-time.</p>
     </div>
-
-    <!-- New Quest Modal -->
-    <div id="newQuestModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="pixel-title">⚔️ NEW QUEST</h2>
-            </div>
-            <div class="modal-body">
-                <label class="modal-label">Quest Description:</label>
-                <textarea id="questTaskInput" class="quest-input" placeholder="Enter the quest task..." rows="4"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button onclick="window.moltcraftApp.spawnNewQuest()" class="btn-primary">SPAWN AGENT</button>
-                <button onclick="window.moltcraftApp.hideNewQuestModal()" class="btn-secondary">CANCEL</button>
-            </div>
-        </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9650;</div>
+      <h3>Multi-Agent</h3>
+      <p>Multiple agents coexist in the same world, coordinating on tasks and avoiding conflicts.</p>
     </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal hidden">
-        <div class="modal-content" style="width:600px;max-height:80vh;display:flex;flex-direction:column;">
-            <div class="modal-header">
-                <h2 class="pixel-title">⚙️ SETTINGS</h2>
-                <div class="settings-tabs">
-                    <button class="settings-tab active" data-tab="moltcraft">🎮 MOLTCRAFT</button>
-                    <button class="settings-tab" data-tab="moltbot">🤖 MOLTBOT</button>
-                </div>
-            </div>
-            <div class="modal-body" style="overflow-y:auto;flex:1;">
-                <!-- Moltcraft Tab -->
-                <div id="tab-moltcraft" class="settings-tab-content">
-                    <h3 class="settings-section-title">🔊 Voice & Audio</h3>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="ambientSoundEnabled"> Background ambient sound
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="autoSpeakEnabled"> Auto-speak agent responses
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="autoSpeakToasts"> Speak toast notifications
-                        </label>
-                    </div>
-                    <div id="elevenLabsStatus" class="config-row" style="margin-top:10px;">
-                        <span class="config-label">ElevenLabs (from Moltbot)</span>
-                        <span class="config-badge off">⏳ CHECKING...</span>
-                    </div>
-                    <h3 class="settings-section-title">🎭 Agent Voices</h3>
-                    <div id="voiceRoster" class="config-grid">
-                        <p class="settings-hint">Connect to see agent voice assignments.</p>
-                    </div>
-                    <p class="settings-hint">🎤 Mic: browser Speech Recognition (free).<br>🔊 TTS: ElevenLabs from Moltbot (skill: sag).<br>🎭 Each agent gets a unique voice automatically.</p>
-                </div>
-
-                <!-- Moltbot Tab -->
-                <div id="tab-moltbot" class="settings-tab-content" style="display:none;">
-                    <div id="moltbotConfigLoading" class="settings-hint" style="text-align:center;padding:20px;">Loading gateway config...</div>
-                    <div id="moltbotConfigContent" style="display:none;">
-
-                        <h3 class="settings-section-title">📡 Channels</h3>
-                        <div id="configChannels" class="config-grid"></div>
-
-                        <h3 class="settings-section-title">🧠 Models</h3>
-                        <div id="configModels" class="config-grid"></div>
-
-                        <h3 class="settings-section-title">🔌 Skills & APIs</h3>
-                        <div id="configSkills" class="config-grid"></div>
-
-                        <h3 class="settings-section-title">⚡ Gateway</h3>
-                        <div id="configGateway" class="config-grid"></div>
-
-                        <h3 class="settings-section-title">🤖 Agent Limits</h3>
-                        <div id="configAgents" class="config-grid"></div>
-
-                        <h3 class="settings-section-title">🪝 Hooks</h3>
-                        <div id="configHooks" class="config-grid"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button onclick="window.moltcraftApp.saveSettings()" class="btn-primary">SAVE</button>
-                <button onclick="window.moltcraftApp.hideSettings()" class="btn-secondary">CLOSE</button>
-            </div>
-        </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9660;</div>
+      <h3>Procedural Worlds</h3>
+      <p>Generate new world layouts for varied training scenarios. No two training runs are identical.</p>
     </div>
+  </div>
+</section>
 
-    <!-- Building Modal (shared for all buildings) -->
-    <div id="buildingModal" class="modal hidden">
-        <div class="modal-content" style="width:600px;max-height:80vh;display:flex;flex-direction:column;">
-            <div class="modal-header">
-                <h2 class="pixel-title" id="buildingModalTitle">Building</h2>
-            </div>
-            <div class="modal-body" id="buildingModalBody" style="overflow-y:auto;flex:1;">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="document.getElementById('buildingModal').classList.add('hidden')">CLOSE</button>
-            </div>
+<section class="integration" id="integration">
+  <div class="section-title">BlackRoad OS Integration</div>
+  <div class="integration-card">
+    <div class="integration-info">
+      <h2>Part of the Fleet</h2>
+      <p>moltcraft runs on Lucidia as a training environment for BlackRoad agents. Agents connect through the NATS mesh, receive tasks from the orchestrator, and execute them in the pixel world. Performance metrics feed into the memory system for agent improvement tracking.</p>
+      <div class="integration-meta">
+        <div class="meta-item">
+          <span class="meta-label">Node</span>
+          <span class="meta-value">Lucidia (.38)</span>
         </div>
+        <div class="meta-item">
+          <span class="meta-label">Agent</span>
+          <span class="meta-value">Trainer</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Port</span>
+          <span class="meta-value">:3002</span>
+        </div>
+      </div>
     </div>
+    <div class="integration-diagram">
+      <div class="diagram-node">
+        <div class="diagram-dot pink"></div>
+        <span>moltcraft</span>
+      </div>
+      <div class="diagram-connector"></div>
+      <div class="diagram-node">
+        <div class="diagram-dot amber"></div>
+        <span>BlackRoad Agent Mesh</span>
+      </div>
+      <div class="diagram-connector"></div>
+      <div class="diagram-node">
+        <div class="diagram-dot blue"></div>
+        <span>Lucidia (.38) (Pi Fleet)</span>
+      </div>
+      <div class="diagram-connector"></div>
+      <div class="diagram-node">
+        <div class="diagram-dot green"></div>
+        <span>blackroad.io</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Toast Notifications Container -->
-    <div id="toastContainer" class="toast-container"></div>
+<footer>
+  <span class="footer-brand">&copy; 2025-2026 BlackRoad OS, Inc. &mdash; Pave Tomorrow.</span>
+  <ul class="footer-links">
+    <li><a href="https://blackroad.io">Home</a></li>
+    <li><a href="https://github.com/BlackRoad-OS-Inc">GitHub</a></li>
+    <li><a href="https://hq.blackroad.io">HQ</a></li>
+  </ul>
+</footer>
 
-    <script src="js/app.js?v=28"></script>
 </body>
 </html>
